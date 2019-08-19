@@ -36,8 +36,11 @@ v-app
                 tr(v-for="(pass, idx) in generatedPasswords")
                   td
                     | {{pass}}
-                    v-btn(icon @click="copyToClipboard(pass)")
-                      v-icon mdi-clipboard-arrow-right
+                    v-tooltip(right)
+                      template(v-slot:activator="{on}")
+                        v-btn(icon @click="copyToClipboard(pass)" v-on="on")
+                          v-icon mdi-clipboard-arrow-right
+                      span コピー
 </template>
 
 <script lang="ts">
