@@ -33,10 +33,10 @@ v-app
           v-card-text
             v-simple-table
               tbody
-                tr
+                tr(v-for="(pass, idx) in generatedPasswords")
                   td
-                    | AAAAAAA
-                    v-btn(icon)
+                    | {{pass}}
+                    v-btn(icon @click="copyToClipboard(pass)")
                       v-icon mdi-clipboard-arrow-right
 </template>
 
@@ -92,7 +92,14 @@ export default Vue.extend({
       weight_num: 60,
       weight_symbol: 60,
       availableSymbols,
-      symbol_switches: availableSymbols.map((_) => true)
+      symbol_switches: availableSymbols.map((_) => true),
+      generatedPasswords: ["AAAAAAA", "BBBBBBB"]
+    }
+  },
+  methods: {
+    copyToClipboard(pass: string) {
+      // @ts-ignore
+      this.$copyText(pass)
     }
   }
 })
