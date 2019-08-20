@@ -24,7 +24,7 @@ v-app
               v-row(align="center" justify="space-around")
                 v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]")
           v-card-actions(justify="center")
-            v-btn(primary)
+            v-btn(primary @click="generatePasswords()")
               v-icon(left) mdi-key
               | 生成
       v-col(xs="10" sm="9" md="8")
@@ -45,6 +45,7 @@ v-app
 
 <script lang="ts">
 import Vue from "vue"
+import * as randomNumber from "random-number-csprng"
 
 /**
  * Equivalent to Python's range.
@@ -84,6 +85,37 @@ function sequencedChars(chars: string): string {
     .join("")
 }
 
+interface Indexable<T> {
+  [index: number]: T
+  length: number
+}
+
+function accumulate(list: Array<number>): Array<number> {
+  return list.map(((sum) => (value) => (sum += value))(0))
+}
+
+async function chooseOneAsync<T>(
+  list: Indexable<T>,
+  weights?: Array<number>
+): Promise<T> {
+  if (weights && weights.length) {
+    const accumulatedWeights = accumulate(weights)
+    const n = await randomNumber(
+      0,
+      accumulatedWeights[accumulatedWeights.length - 1] - 1
+    )
+    const m = accumulatedWeights.findIndex(
+      (sum, i, sums) => (i === 0 ? true : sums[i - 1] <= n) && n < sum
+    )
+    if (m !== -1) return list[m]
+  }
+  return list[await randomNumber(0, list.length - 1)]
+}
+
+function emptyArray<T>(): Array<T> {
+  return []
+}
+
 export default Vue.extend({
   data() {
     const availableSymbols = [...sequencedChars("!/:@[`{~")]
@@ -96,13 +128,56 @@ export default Vue.extend({
       weight_symbol: 60,
       availableSymbols,
       symbol_switches: availableSymbols.map((_) => true),
-      generatedPasswords: ["AAAAAAA", "BBBBBBB"]
+      generatedPasswords: emptyArray<string>(),
+      lowerList: sequencedChars("az"),
+      upperList: sequencedChars("AZ"),
+      digitsList: sequencedChars("09")
     }
   },
   methods: {
     copyToClipboard(pass: string) {
       // @ts-ignore
       this.$copyText(pass)
+    },
+    async generatePasswords() {
+      // .fill(null) is necessary
+      this.generatedPasswords = await Promise.all(
+        Array(10)
+          .fill(null)
+          .map(() => this.generateOnePassword())
+      )
+    },
+    async generateOnePassword() {
+      const usingSymbolsList = [...this.availableSymbols]
+        .filter((_, i) => this.symbol_switches[i])
+        .join("")
+      const charListsList = [
+        this.lowerList,
+        this.upperList,
+        this.digitsList,
+        usingSymbolsList
+      ]
+      // p(lower) /= 2 and p(upper) /= 2.
+      // weights must be integers, so p(num) *= 2 and p(symbol) *= 2 instead.
+      const numSymbolWeightCoef = this.uses_upper ? 2 : 1
+      const charTypeWeights = [
+        this.weight_alpha,
+        this.uses_upper ? this.weight_alpha : 0,
+        this.uses_num ? this.weight_num * numSymbolWeightCoef : 0,
+        this.uses_symbol && usingSymbolsList.length
+          ? this.weight_symbol * numSymbolWeightCoef
+          : 0
+      ]
+      return (await Promise.all(
+        Array(16)
+          .fill(null)
+          .map(async () => {
+            const ret = await chooseOneAsync(
+              await chooseOneAsync(charListsList, charTypeWeights)
+            )
+            return ret
+          })
+      )).join("")
     }
   }
 })
