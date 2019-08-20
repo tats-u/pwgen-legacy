@@ -12,11 +12,11 @@ v-app
               v-row
                 v-col(cols="12")
                   v-subheader アルファベット
-                  v-slider(min="0" max="120" thumb-label="always" v-model="weight_alpha")
+                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_alpha")
                   v-subheader 数字
-                  v-slider(min="0" max="120" thumb-label="always" v-model="weight_num")
+                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_num")
                   v-subheader 記号
-                  v-slider(min="0" max="120" thumb-label="always" v-model="weight_symbol")
+                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_symbol")
               v-row(align="center" justify="space-around")
                 v-switch(label="大文字" v-model="uses_upper")
                 v-switch(label="数字" v-model="uses_num")
