@@ -4,7 +4,7 @@
 
 https://tats-u.github.io/pwgen/
 
-In this gtenerator, you can:
+In this generator, you can:
 
 - Adjust the probabilities of appearance of alphabets & numbers & symbols.
 - Adjust the length of generated passwords.
