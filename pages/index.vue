@@ -36,13 +36,13 @@ v-app
               v-row(align="center" justify="space-around")
                 v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol" v-bind:key="idx")
               v-row(justify="space-between")
-                v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol")
+                v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-toggle-switch-off
                   | 全てオフ
-                v-btn(@click="unifySymbolSwitchesState(true)" :disabled="!uses_symbol")
+                v-btn(@click="unifySymbolSwitchesState(true)" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-toggle-switch
                   | 全てオン
-                v-btn(@click.stop="openSymbolConfigDialog()" :disabled="!uses_symbol")
+                v-btn(@click.stop="openSymbolConfigDialog()" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-keyboard
                   | キーボードから設定
               v-row
