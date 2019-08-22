@@ -68,7 +68,7 @@ v-app
               tbody
                 tr(v-for="(pass, idx) in generatedPasswords")
                   td
-                    | {{pass}}
+                    span.font-monospace {{pass}}
                     v-tooltip(right)
                       template(v-slot:activator="{on}")
                         v-btn(icon @click="copyToClipboard(pass)" v-on="on")
@@ -87,6 +87,11 @@ v-app
                 v-icon(left) mdi-check
                 | OK
 </template>
+
+<style lang="sass">
+.font-monospace
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace
+</style>
 
 <script lang="ts">
 import Vue from "vue"
