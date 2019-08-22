@@ -75,13 +75,15 @@ v-app
     v-row(justify="center")
       v-dialog(v-model="isSymbolConfigDialogOpened" max-width="600")
         v-card
-          v-card-title.headline 出現させたい記号だけを入力
-          v-card-text
-            v-text-field(v-model="usingSymbolListString" hint="記号の重複や、記号以外の文字は無視されます")
-          v-card-actions(justify="center")
-            v-btn(color="primary" @click="setSymbolSwitchesFromStr()")
-              v-icon(left) mdi-check
-              | OK
+          //- Hack: Use @submit."prevent" to prevent reloading by submitting
+          v-form(@submit.prevent="setSymbolSwitchesFromStr")
+            v-card-title.headline 出現させたい記号だけを入力
+            v-card-text
+              v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" hint="記号の重複や、記号以外の文字は無視されます")
+            v-card-actions(justify="center")
+              v-btn(color="primary" type="submit")
+                v-icon(left) mdi-check
+                | OK
 </template>
 
 <script lang="ts">
@@ -237,6 +239,8 @@ export default Vue.extend({
     openSymbolConfigDialog() {
       this.usingSymbolListString = ""
       this.isSymbolConfigDialogOpened = true
+      // @ts-ignore
+      this.$nextTick(() => this.$refs.usingSymbolListString.focus())
     },
     setSymbolSwitchesFromStr() {
       this.unifySymbolSwitchesState(false)
