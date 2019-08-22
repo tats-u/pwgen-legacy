@@ -89,6 +89,8 @@ v-app
               v-btn(color="primary" type="submit")
                 v-icon(left) mdi-check
                 | OK
+    v-btn(fixed fab bottom right color="green" dark href="https://github.com/tats-u/pwgen/" v-on="on")
+      v-icon mdi-github-circle
 </template>
 
 <style lang="sass">
