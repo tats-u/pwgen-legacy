@@ -1,4 +1,5 @@
 import colors from "vuetify/es5/util/colors"
+import HardSourceWebpackPlugin from "hard-source-webpack-plugin"
 
 export default {
   mode: "universal",
@@ -75,10 +76,14 @@ export default {
    ** Build configuration
    */
   build: {
+    cache: true,
+    parallel: true,
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {
+      config.plugins.push(new HardSourceWebpackPlugin())
+    }
   },
   ...(process.env.DEPLOY_ENV === "GH_PAGES"
     ? {
