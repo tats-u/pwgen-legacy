@@ -3,7 +3,7 @@ v-app
   v-container
     v-row(justify="center")
       h1 パスワードジェネレータ
-    v-row(justify="center" wrap)
+    v-row(justify="center")
       v-col(xs="10" sm="9" md="8")
         v-card
           v-card-title 設定
@@ -27,6 +27,7 @@ v-app
             v-btn(primary @click="generatePasswords()")
               v-icon(left) mdi-key
               | 生成
+    v-row(justify="center")
       v-col(xs="10" sm="9" md="8")
         v-card
           v-card-title 生成したパスワード
