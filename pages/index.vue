@@ -24,7 +24,7 @@ v-app
               v-row(align="center" justify="space-around")
                 v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]")
           v-card-actions(justify="center")
-            v-btn(primary @click="generatePasswords()")
+            v-btn(color="primary" @click="generatePasswords()")
               v-icon(left) mdi-key
               | 生成
     v-row(justify="center")
