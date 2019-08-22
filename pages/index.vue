@@ -139,6 +139,7 @@ async function chooseOneAsync<T>(
   list: Indexable<T>,
   weights?: Array<number>
 ): Promise<T> {
+  if (list.length === 1) return list[0]
   if (weights && weights.length) {
     const accumulatedWeights = accumulate(weights)
     const n = await randomNumber(
