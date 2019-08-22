@@ -89,13 +89,25 @@ v-app
               v-btn(color="primary" type="submit")
                 v-icon(left) mdi-check
                 | OK
-    v-btn(fixed fab bottom right color="green" dark href="https://github.com/tats-u/pwgen/")
-      v-icon mdi-github-circle
+    v-layout.fixed-bottomright
+      .text-center
+        .fab-margin
+          v-btn(fab color="cyan" dark href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftats-u.github.io%2Fpwgen%2F" target="_blank")
+            v-icon mdi-twitter
+        .fab-margin
+          v-btn(fab color="green" dark href="https://github.com/tats-u/pwgen/")
+            v-icon mdi-github-circle
 </template>
 
 <style lang="sass">
 .font-monospace
   font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace
+.fixed-bottomright
+  position: fixed
+  bottom: 0
+  right: 0
+.fab-margin
+  margin: 15px
 </style>
 
 <script lang="ts">
