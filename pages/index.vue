@@ -33,6 +33,16 @@ v-app
                 v-subheader 出現記号
               v-row(align="center" justify="space-around")
                 v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol" v-bind:key="idx")
+              v-row(justify="space-between")
+                v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol")
+                  v-icon(left) mdi-toggle-switch-off
+                  | 全てオフ
+                v-btn(@click="unifySymbolSwitchesState(true)" :disabled="!uses_symbol")
+                  v-icon(left) mdi-toggle-switch
+                  | 全てオン
+                v-btn(@click.stop="openSymbolConfigDialog()" :disabled="!uses_symbol")
+                  v-icon(left) mdi-keyboard
+                  | キーボードから設定
               v-row
                 v-col(cols="12")
                   v-subheader パスワード長
@@ -62,6 +72,16 @@ v-app
                         v-btn(icon @click="copyToClipboard(pass)" v-on="on")
                           v-icon mdi-clipboard-arrow-right
                       span コピー
+    v-row(justify="center")
+      v-dialog(v-model="isSymbolConfigDialogOpened" max-width="600")
+        v-card
+          v-card-title.headline 出現させたい記号だけを入力
+          v-card-text
+            v-text-field(v-model="usingSymbolListString" hint="記号の重複や、記号以外の文字は無視されます")
+          v-card-actions(justify="center")
+            v-btn(color="primary" @click="setSymbolSwitchesFromStr()")
+              v-icon(left) mdi-check
+              | OK
 </template>
 
 <script lang="ts">
@@ -152,6 +172,8 @@ export default Vue.extend({
       candicatePasswordGenerateCounts: [1, 5, 10, 20, 50, 100],
       availableSymbols,
       symbol_switches: availableSymbols.map((_) => true),
+      isSymbolConfigDialogOpened: false,
+      usingSymbolListString: "",
       generatedPasswords: emptyArray<string>(),
       lowerList: sequencedChars("az"),
       upperList: sequencedChars("AZ"),
@@ -202,6 +224,29 @@ export default Vue.extend({
             return ret
           })
       )).join("")
+    },
+    unifySymbolSwitchesState(state: boolean) {
+      for (let i = 0; i < this.symbol_switches.length; ++i) {
+        // Don't use this.symbol_switches[i] = state
+        // or this.symbol_switches.fill(state)
+        // Or states will not be reflectred
+        this.$set(this.symbol_switches, i, state)
+      }
+    },
+    openSymbolConfigDialog() {
+      this.usingSymbolListString = ""
+      this.isSymbolConfigDialogOpened = true
+    },
+    setSymbolSwitchesFromStr() {
+      this.unifySymbolSwitchesState(false)
+      for (const char of this.usingSymbolListString) {
+        const idx = this.availableSymbols.indexOf(char)
+        if (idx !== -1) {
+          this.$set(this.symbol_switches, idx, true)
+        }
+      }
+      this.isSymbolConfigDialogOpened = false
+      this.usingSymbolListString = ""
     }
   }
 })
