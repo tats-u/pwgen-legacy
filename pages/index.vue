@@ -65,8 +65,8 @@ v-app
         v-card
           v-card-title 生成したパスワード
           v-card-text
+            p(v-if="!generatedPasswords.length") 上の「生成」ボタンを押すと、生成されたパスワードが表示されます
             v-simple-table
-              thead(v-if="!generatedPasswords.length") 上の「生成」ボタンを押すと、生成されたパスワードが表示されます
               tbody
                 tr(v-for="(pass, idx) in generatedPasswords")
                   td
