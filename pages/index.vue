@@ -14,9 +14,9 @@ v-app
               v-row
                 v-col(cols="12")
                   v-subheader アルファベット
-                  v-slider(min="1" max="120" thumb-label v-model="weight_alpha")
+                  v-slider(min="0" max="120" thumb-label v-model="weight_alpha")
                     template(v-slot:append)
-                      v-text-field(min="1" max="120" v-model="weight_alpha" type="number")
+                      v-text-field(min="0" max="120" v-model="weight_alpha" type="number")
                   v-subheader 数字
                   v-slider(min="1" max="120" thumb-label v-model="weight_num" :disabled="!uses_num")
                     template(v-slot:append)
