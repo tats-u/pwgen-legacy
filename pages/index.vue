@@ -55,7 +55,8 @@ v-app
                 v-col(cols="12")
                   v-subheader パスワード生成数
                   v-select(v-model="passwordGenerateCount" :items="candicatePasswordGenerateCounts")
-          v-card-actions(justify="center")
+          v-card-actions
+            v-spacer
             v-btn(color="primary" @click="generatePasswords()")
               v-icon(left) mdi-key
               | 生成
@@ -83,6 +84,7 @@ v-app
             v-card-text
               v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" hint="記号の重複や、記号以外の文字は無視されます")
             v-card-actions(justify="center")
+              v-spacer
               v-btn(color="primary" type="submit")
                 v-icon(left) mdi-check
                 | OK
