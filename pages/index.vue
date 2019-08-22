@@ -10,6 +10,8 @@ v-app
           v-card-text
             v-container
               v-row
+                v-subheader 出現比
+              v-row
                 v-col(cols="12")
                   v-subheader アルファベット
                   v-slider(min="1" max="120" thumb-label v-model="weight_alpha")
