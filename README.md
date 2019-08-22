@@ -1,6 +1,20 @@
-# pwgen
+# Password Generator
 
-> Password generator
+[![Build Status](https://travis-ci.com/tats-u/pwgen.svg?branch=master)](https://travis-ci.com/tats-u/pwgen)
+
+https://tats-u.github.io/pwgen/
+
+In this gtenerator, you can:
+
+- Adjust the probabilities of appearance of alphabets & numbers & symbols.
+- Adjust the length of generated passwords.
+- Exclude uppercases or numbers or symbols from generated passwords.
+- Customize maybe-contained symbols (except for white space)
+- Copy generated passwords by a simple click.
+
+You will be able to (can't for now though):
+
+- Restrict the type of a character next to another charactor.
 
 ## Build Setup
 
