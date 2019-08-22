@@ -14,15 +14,15 @@ v-app
                   v-subheader アルファベット
                   v-slider(min="1" max="120" thumb-label="always" v-model="weight_alpha")
                   v-subheader 数字
-                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_num")
+                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_num" :disabled="!uses_num")
                   v-subheader 記号
-                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_symbol")
+                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_symbol" :disabled="!uses_symbol")
               v-row(align="center" justify="space-around")
                 v-switch(label="大文字" v-model="uses_upper")
                 v-switch(label="数字" v-model="uses_num")
                 v-switch(label="記号" v-model="uses_symbol")
               v-row(align="center" justify="space-around")
-                v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]")
+                v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol")
               v-row
                 v-col(cols="12")
                   v-subheader パスワード長
