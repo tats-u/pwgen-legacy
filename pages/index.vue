@@ -154,7 +154,7 @@ export default Vue.extend({
     async generatePasswords() {
       // .fill(null) is necessary
       this.generatedPasswords = await Promise.all(
-        Array(this.passwordLength)
+        Array(this.passwordGenerateCount)
           .fill(null)
           .map(() => this.generateOnePassword())
       )
@@ -181,7 +181,7 @@ export default Vue.extend({
           : 0
       ]
       return (await Promise.all(
-        Array(this.passwordGenerateCount)
+        Array(this.passwordLength)
           .fill(null)
           .map(async () => {
             const ret = await chooseOneAsync(
