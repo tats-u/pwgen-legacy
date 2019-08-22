@@ -28,7 +28,7 @@ v-app
                 v-switch(label="数字" v-model="uses_num")
                 v-switch(label="記号" v-model="uses_symbol")
               v-row(align="center" justify="space-around")
-                v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol")
+                v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol" v-bind:key="idx")
               v-row
                 v-col(cols="12")
                   v-subheader パスワード長
