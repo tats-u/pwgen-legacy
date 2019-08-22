@@ -12,11 +12,17 @@ v-app
               v-row
                 v-col(cols="12")
                   v-subheader アルファベット
-                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_alpha")
+                  v-slider(min="1" max="120" thumb-label v-model="weight_alpha")
+                    template(v-slot:append)
+                      v-text-field(min="1" max="120" v-model="weight_alpha" type="number")
                   v-subheader 数字
-                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_num" :disabled="!uses_num")
+                  v-slider(min="1" max="120" thumb-label v-model="weight_num" :disabled="!uses_num")
+                    template(v-slot:append)
+                      v-text-field(min="1" max="120" v-model="weight_num" type="number" :disabled="!uses_num")
                   v-subheader 記号
-                  v-slider(min="1" max="120" thumb-label="always" v-model="weight_symbol" :disabled="!uses_symbol")
+                  v-slider(min="1" max="120" thumb-label v-model="weight_symbol" :disabled="!uses_symbol")
+                    template(v-slot:append)
+                      v-text-field(min="1" max="120" v-model="weight_symbol" type="number" :disabled="!uses_symbol")
               v-row(align="center" justify="space-around")
                 v-switch(label="大文字" v-model="uses_upper")
                 v-switch(label="数字" v-model="uses_num")
@@ -26,7 +32,9 @@ v-app
               v-row
                 v-col(cols="12")
                   v-subheader パスワード長
-                  v-slider(min="8" max="128" thumb-label="always" v-model="passwordLength")
+                  v-slider(min="8" max="128" thumb-label v-model="passwordLength")
+                    template(v-slot:append)
+                      v-text-field(min="8" max="128" v-model="passwordLength" type="number")
               v-row
                 v-col(cols="12")
                   v-subheader パスワード生成数
