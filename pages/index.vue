@@ -23,10 +23,14 @@ v-app
                   v-slider(min="1" max="120" thumb-label v-model="weight_symbol" :disabled="!uses_symbol")
                     template(v-slot:append)
                       v-text-field(min="1" max="120" v-model="weight_symbol" type="number" :disabled="!uses_symbol")
+              v-row
+                v-subheader 出現文字種
               v-row(align="center" justify="space-around")
                 v-switch(label="大文字" v-model="uses_upper")
                 v-switch(label="数字" v-model="uses_num")
                 v-switch(label="記号" v-model="uses_symbol")
+              v-row
+                v-subheader 出現記号
               v-row(align="center" justify="space-around")
                 v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol" v-bind:key="idx")
               v-row
