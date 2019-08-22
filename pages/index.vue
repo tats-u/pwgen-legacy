@@ -23,6 +23,14 @@ v-app
                 v-switch(label="記号" v-model="uses_symbol")
               v-row(align="center" justify="space-around")
                 v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]")
+              v-row
+                v-col(cols="12")
+                  v-subheader パスワード長
+                  v-slider(min="8" max="128" thumb-label="always" v-model="passwordLength")
+              v-row
+                v-col(cols="12")
+                  v-subheader パスワード生成数
+                  v-select(v-model="passwordGenerateCount" :items="candicatePasswordGenerateCounts")
           v-card-actions(justify="center")
             v-btn(color="primary" @click="generatePasswords()")
               v-icon(left) mdi-key
@@ -127,6 +135,9 @@ export default Vue.extend({
       weight_alpha: 60,
       weight_num: 60,
       weight_symbol: 60,
+      passwordLength: 16,
+      passwordGenerateCount: 10,
+      candicatePasswordGenerateCounts: [1, 5, 10, 20, 50, 100],
       availableSymbols,
       symbol_switches: availableSymbols.map((_) => true),
       generatedPasswords: emptyArray<string>(),
@@ -143,7 +154,7 @@ export default Vue.extend({
     async generatePasswords() {
       // .fill(null) is necessary
       this.generatedPasswords = await Promise.all(
-        Array(10)
+        Array(this.passwordLength)
           .fill(null)
           .map(() => this.generateOnePassword())
       )
@@ -170,7 +181,7 @@ export default Vue.extend({
           : 0
       ]
       return (await Promise.all(
-        Array(16)
+        Array(this.passwordGenerateCount)
           .fill(null)
           .map(async () => {
             const ret = await chooseOneAsync(
