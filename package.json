@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@mdi/font": "^4.0.96",
-    "@nuxt/typescript": "^2.8.1",
+    "@nuxt/typescript-build": "^0.1.11",
     "@nuxtjs/eslint-config": "^1.0.1",
     "@nuxtjs/eslint-module": "^1.0.0",
     "@nuxtjs/vuetify": "^1.0.0",

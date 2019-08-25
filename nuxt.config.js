@@ -38,8 +38,9 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  devModules: [
+  buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
+    "@nuxt/typescript-build",
     "@nuxtjs/eslint-module",
     "@nuxtjs/vuetify"
   ],
@@ -71,6 +72,10 @@ export default {
         }
       }
     }
+  },
+  typescript: {
+    typeCheck: process.env.NODE_ENV !== "production",
+    ignoreNotFoundWarnings: true
   },
   /*
    ** Build configuration
