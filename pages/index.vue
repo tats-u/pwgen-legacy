@@ -34,7 +34,8 @@ v-app
               v-row
                 v-subheader 出現記号
               v-row(align="center" justify="space-around")
-                v-switch(v-for="(char, idx) in availableSymbols" :label="char" v-model="symbol_switches[idx]" :disabled="!uses_symbol" v-bind:key="idx")
+                v-chip-group(multiple column active-class="primary" v-model="using_symbols_list")
+                  v-chip(v-for="(char, idx) in availableSymbols" :value="char") {{ char }}
               v-row(justify="space-between")
                 v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-toggle-switch-off
@@ -198,7 +199,7 @@ export default Vue.extend({
       passwordGenerateCount: 10,
       candicatePasswordGenerateCounts: [1, 5, 10, 20, 50, 100],
       availableSymbols,
-      symbol_switches: availableSymbols.map((_) => true),
+      using_symbols_list: availableSymbols,
       isSymbolConfigDialogOpened: false,
       usingSymbolListString: "",
       generatedPasswords: emptyArray<string>(),
@@ -221,9 +222,7 @@ export default Vue.extend({
       )
     },
     async generateOnePassword() {
-      const usingSymbolsList = [...this.availableSymbols]
-        .filter((_, i) => this.symbol_switches[i])
-        .join("")
+      const usingSymbolsList = this.using_symbols_list.join("")
       const charListsList = [
         this.lowerList,
         this.upperList,
@@ -241,24 +240,21 @@ export default Vue.extend({
           ? this.weight_symbol * numSymbolWeightCoef
           : 0
       ]
-      return (await Promise.all(
-        Array(this.passwordLength)
-          .fill(null)
-          .map(async () => {
-            const ret = await chooseOneAsync(
-              await chooseOneAsync(charListsList, charTypeWeights)
-            )
-            return ret
-          })
-      )).join("")
+      return (
+        await Promise.all(
+          Array(this.passwordLength)
+            .fill(null)
+            .map(async () => {
+              const ret = await chooseOneAsync(
+                await chooseOneAsync(charListsList, charTypeWeights)
+              )
+              return ret
+            })
+        )
+      ).join("")
     },
     unifySymbolSwitchesState(state: boolean) {
-      for (let i = 0; i < this.symbol_switches.length; ++i) {
-        // Don't use this.symbol_switches[i] = state
-        // or this.symbol_switches.fill(state)
-        // Or states will not be reflectred
-        this.$set(this.symbol_switches, i, state)
-      }
+      this.using_symbols_list = state ? this.availableSymbols : []
     },
     openSymbolConfigDialog() {
       this.usingSymbolListString = ""
@@ -267,13 +263,9 @@ export default Vue.extend({
       this.$nextTick(() => this.$refs.usingSymbolListString.focus())
     },
     setSymbolSwitchesFromStr() {
-      this.unifySymbolSwitchesState(false)
-      for (const char of this.usingSymbolListString) {
-        const idx = this.availableSymbols.indexOf(char)
-        if (idx !== -1) {
-          this.$set(this.symbol_switches, idx, true)
-        }
-      }
+      this.using_symbols_list = this.availableSymbols.filter((char) =>
+        this.usingSymbolListString.includes(char)
+      )
       this.isSymbolConfigDialogOpened = false
       this.usingSymbolListString = ""
     }
