@@ -1,6 +1,8 @@
 import colors from "vuetify/es5/util/colors"
 import HardSourceWebpackPlugin from "hard-source-webpack-plugin"
 
+const ghpagesRoot = "/pwgen"
+
 export default {
   mode: "universal",
   /*
@@ -19,7 +21,13 @@ export default {
       }
     ],
     link: [
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" }
+      {
+        rel: "icon",
+        type: "image/x-icon",
+        href: `${
+          process.env.DEPLOY_ENV === "GH_PAGES" ? ghpagesRoot : ""
+        }/favicon.ico`
+      }
       // { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css' }
     ]
   },
@@ -93,7 +101,7 @@ export default {
   ...(process.env.DEPLOY_ENV === "GH_PAGES"
     ? {
         router: {
-          base: "/pwgen"
+          base: ghpagesRoot
         }
       }
     : {})
