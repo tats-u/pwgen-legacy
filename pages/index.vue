@@ -84,7 +84,7 @@ v-app
           v-form(@submit.prevent="setSymbolSwitchesFromStr")
             v-card-title.headline {{ $t("input_symbols_from_kb") }}
             v-card-text
-              v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" hint="記号の重複や、記号以外の文字は無視されます")
+              v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" :hint="$t('input_symbols_from_kb_hint')")
             v-card-actions(justify="center")
               v-spacer
               v-btn(color="primary" type="submit")
@@ -115,6 +115,7 @@ en:
   turn_all_off: Turn All Off
   config_from_kb: Configure from Keyboard
   input_symbols_from_kb: Input symbols ONLY to be contained
+  input_symbols_from_kb_hint: Duplicatied symbols and non-symbol characters will be ignored.
   pass_len: Password Length
   pass_gen_num: Number of Passwords to Generate
   generate: Generate
@@ -138,6 +139,7 @@ ja:
   turn_all_off: 全てオフ
   config_from_kb: キーボードから設定
   input_symbols_from_kb: 出現させたい記号だけを入力
+  input_symbols_from_kb_hint: 記号の重複や、記号以外の文字は無視されます
   pass_len: パスワード長
   pass_gen_num: パスワード生成数
   generate: 生成
