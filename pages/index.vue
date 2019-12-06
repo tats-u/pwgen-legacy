@@ -130,6 +130,7 @@ ja:
   appearance_ratio: 出現比
   alphabets: アルファベット
   digits: 数字
+  symbols: 記号
   uppercase: 大文字
   appearing_char_type: 出現文字種
   appearing_symbols: 出現記号
