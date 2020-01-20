@@ -16,6 +16,10 @@ You will be able to (can't for now though):
 
 - Restrict the type of a character next to another charactor.
 
+## Preview
+
+![Preview image](https://user-images.githubusercontent.com/12870451/72742938-0b88ee80-3bee-11ea-8d5c-c39be76c029b.png)
+
 ## Build Setup
 
 ``` bash
