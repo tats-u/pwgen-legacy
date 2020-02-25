@@ -87,7 +87,10 @@ v-app
               v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" :hint="$t('input_symbols_from_kb_hint')")
             v-card-actions(justify="center")
               v-spacer
-              v-btn(color="primary" type="submit")
+              v-btn(@click="isSymbolConfigDialogOpened = false" text)
+                v-icon(left) mdi-close
+                | {{ $t("cancel") }}
+              v-btn(color="primary" type="submit" text)
                 v-icon(left) mdi-check
                 | OK
     v-layout.fixed-bottomright
@@ -116,6 +119,7 @@ en:
   config_from_kb: Configure from Keyboard
   input_symbols_from_kb: Input symbols ONLY to be contained
   input_symbols_from_kb_hint: Duplicatied symbols and non-symbol characters will be ignored.
+  cancel: Cancel
   pass_len: Password Length
   pass_gen_num: Number of Passwords to Generate
   generate: Generate
@@ -140,6 +144,7 @@ ja:
   config_from_kb: キーボードから設定
   input_symbols_from_kb: 出現させたい記号だけを入力
   input_symbols_from_kb_hint: 記号の重複や、記号以外の文字は無視されます
+  cancel: キャンセル
   pass_len: パスワード長
   pass_gen_num: パスワード生成数
   generate: 生成
