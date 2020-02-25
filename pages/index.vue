@@ -10,6 +10,12 @@ v-app
           v-card-text
             v-container
               v-row
+                v-subheader {{ $t("language") }}
+              v-row
+                v-btn-toggle(v-model="$i18n.locale" color="primary")
+                  v-btn(v-for="(emoji, lang) in languageIcons" exclusive :value="lang" :to="switchLocalePath(lang)" :link="lang !== $i18n.locale" nuxt)
+                    | {{ emoji }} {{ $t("languages")[lang] }}
+              v-row
                 v-subheader {{ $t("appearance_ratio") }}
               v-row
                 v-col(cols="12")
@@ -127,8 +133,9 @@ en:
   copy: Copy
   not_yet_generated: Press the above “GENERATE” button and passwords will be listed here.
   language: Language
-  english: English
-  japanese: Japanese (日本語)
+  languages:
+    en: English
+    ja: Japanese (日本語)
 ja:
   title: パスワードジェネレータ
   settings: 設定
@@ -152,8 +159,9 @@ ja:
   copy: コピー
   not_yet_generated: 上の「生成」ボタンを押すと、生成されたパスワードが表示されます
   language: 言語
-  english: 英語 (English)
-  japanese: 日本語
+  languages:
+    en: 英語 (English)
+    ja: 日本語
 </i18n>
 
 <style lang="sass">
@@ -261,7 +269,11 @@ export default Vue.extend({
       generatedPasswords: emptyArray<string>(),
       lowerList: sequencedChars("az"),
       upperList: sequencedChars("AZ"),
-      digitsList: sequencedChars("09")
+      digitsList: sequencedChars("09"),
+      languageIcons: {
+        en: "🌐",
+        ja: "🇯🇵"
+      }
     }
   },
   methods: {
