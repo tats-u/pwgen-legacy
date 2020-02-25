@@ -58,6 +58,10 @@ v-app
                   v-slider(min="8" max="128" thumb-label v-model="passwordLength")
                     template(v-slot:append)
                       v-text-field(min="8" max="128" v-model="passwordLength" type="number")
+              v-row(align="center" justify="space-around")
+                v-col(cols="12")
+                  v-chip-group(column active-class="primary" v-model="passwordLength")
+                    v-chip(v-for="(len, idx) in candicatePasswordLengths" :value="len") {{ len }}
               v-row
                 v-col(cols="12")
                   v-subheader {{ $t("pass_gen_num") }}
@@ -262,6 +266,7 @@ export default Vue.extend({
       passwordLength: 16,
       passwordGenerateCount: 10,
       candicatePasswordGenerateCounts: [1, 5, 10, 20, 50, 100],
+      candicatePasswordLengths: [8, 16, 24, 32, 48, 64, 80, 96, 128],
       availableSymbols,
       using_symbols_list: availableSymbols,
       isSymbolConfigDialogOpened: false,
