@@ -2,71 +2,81 @@
 v-app
   v-container
     v-row(justify="center")
-      h1 パスワードジェネレータ
+      h1 {{ $t("title") }}
     v-row(justify="center")
       v-col(xs="10" sm="9" md="8")
         v-card
-          v-card-title 設定
+          v-card-title {{ $t("settings") }}
           v-card-text
             v-container
               v-row
-                v-subheader 出現比
+                v-subheader {{ $t("language") }}
+              v-row
+                v-btn-toggle(v-model="$i18n.locale" color="primary")
+                  v-btn(v-for="(emoji, lang) in languageIcons" exclusive :value="lang" :to="switchLocalePath(lang)" :link="lang !== $i18n.locale" nuxt)
+                    | {{ emoji }} {{ $t("languages")[lang] }}
+              v-row
+                v-subheader {{ $t("appearance_ratio") }}
               v-row
                 v-col(cols="12")
-                  v-subheader アルファベット
+                  v-subheader {{ $t("alphabets") }}
                   v-slider(min="0" max="120" thumb-label v-model="weight_alpha")
                     template(v-slot:append)
                       v-text-field(min="0" max="120" v-model="weight_alpha" type="number")
-                  v-subheader 数字
+                  v-subheader {{ $t("digits") }}
                   v-slider(min="1" max="120" thumb-label v-model="weight_num" :disabled="!uses_num")
                     template(v-slot:append)
                       v-text-field(min="1" max="120" v-model="weight_num" type="number" :disabled="!uses_num")
-                  v-subheader 記号
+                  v-subheader {{ $t("symbols") }}
                   v-slider(min="1" max="120" thumb-label v-model="weight_symbol" :disabled="!uses_symbol")
                     template(v-slot:append)
                       v-text-field(min="1" max="120" v-model="weight_symbol" type="number" :disabled="!uses_symbol")
               v-row
-                v-subheader 出現文字種
+                v-subheader {{ $t("appearing_char_type") }}
               v-row(align="center" justify="space-around")
-                v-switch(label="大文字" v-model="uses_upper")
-                v-switch(label="数字" v-model="uses_num")
-                v-switch(label="記号" v-model="uses_symbol")
+                v-switch(:label="$t('uppercase')" v-model="uses_upper")
+                v-switch(:label="$t('digits')" v-model="uses_num")
+                v-switch(:label="$t('symbols')" v-model="uses_symbol")
               v-row
-                v-subheader 出現記号
+                v-subheader {{ $t("appearing_symbols") }}
               v-row(align="center" justify="space-around")
                 v-chip-group(multiple column active-class="primary" v-model="using_symbols_list")
                   v-chip(v-for="(char, idx) in availableSymbols" :value="char") {{ char }}
               v-row(justify="space-between")
                 v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-toggle-switch-off
-                  | 全てオフ
+                  | {{ $t("turn_all_off") }}
                 v-btn(@click="unifySymbolSwitchesState(true)" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-toggle-switch
-                  | 全てオン
+                  | {{ $t("turn_all_on") }}
                 v-btn(@click.stop="openSymbolConfigDialog()" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-keyboard
-                  | キーボードから設定
+                  | {{ $t("config_from_kb")}}
               v-row
                 v-col(cols="12")
-                  v-subheader パスワード長
+                  v-subheader {{ $t("pass_len") }}
                   v-slider(min="8" max="128" thumb-label v-model="passwordLength")
                     template(v-slot:append)
                       v-text-field(min="8" max="128" v-model="passwordLength" type="number")
+              v-row(align="center" justify="space-around")
+                v-col(cols="12")
+                  v-chip-group(column active-class="primary" v-model="passwordLength")
+                    v-chip(v-for="(len, idx) in candicatePasswordLengths" :value="len") {{ len }}
               v-row
                 v-col(cols="12")
-                  v-subheader パスワード生成数
+                  v-subheader {{ $t("pass_gen_num") }}
                   v-select(v-model="passwordGenerateCount" :items="candicatePasswordGenerateCounts")
           v-card-actions
             v-spacer
             v-btn(color="primary" @click="generatePasswords()")
               v-icon(left) mdi-key
-              | 生成
+              | {{ $t("generate") }}
     v-row(justify="center")
       v-col(xs="10" sm="9" md="8")
         v-card
-          v-card-title 生成したパスワード
+          v-card-title {{ $t("generated_pass") }}
           v-card-text
-            p(v-if="!generatedPasswords.length") 上の「生成」ボタンを押すと、生成されたパスワードが表示されます
+            p(v-if="!generatedPasswords.length") {{ $t("not_yet_generated") }}
             v-simple-table
               tbody
                 tr(v-for="(pass, idx) in generatedPasswords")
@@ -76,18 +86,21 @@ v-app
                       template(v-slot:activator="{on}")
                         v-btn(icon @click="copyToClipboard(pass)" v-on="on")
                           v-icon mdi-clipboard-arrow-right
-                      span コピー
+                      span {{ $t("copy") }}
     v-row(justify="center")
       v-dialog(v-model="isSymbolConfigDialogOpened" max-width="600")
         v-card
           //- Hack: Use @submit."prevent" to prevent reloading by submitting
           v-form(@submit.prevent="setSymbolSwitchesFromStr")
-            v-card-title.headline 出現させたい記号だけを入力
+            v-card-title.headline {{ $t("input_symbols_from_kb") }}
             v-card-text
-              v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" hint="記号の重複や、記号以外の文字は無視されます")
+              v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" :hint="$t('input_symbols_from_kb_hint')")
             v-card-actions(justify="center")
               v-spacer
-              v-btn(color="primary" type="submit")
+              v-btn(@click="isSymbolConfigDialogOpened = false" text)
+                v-icon(left) mdi-close
+                | {{ $t("cancel") }}
+              v-btn(color="primary" type="submit" text)
                 v-icon(left) mdi-check
                 | OK
     v-layout.fixed-bottomright
@@ -99,6 +112,61 @@ v-app
           v-btn(fab color="green" dark href="https://github.com/tats-u/pwgen/")
             v-icon mdi-github-circle
 </template>
+
+<i18n lang="yaml">
+en:
+  title: Password Generator
+  settings: Settings
+  appearance_ratio: Appearance Ratio
+  alphabets: Alphabets
+  digits: Digits
+  symbols: Symbols
+  uppercase: Uppercase Letters
+  appearing_char_type: Appearing Character Type
+  appearing_symbols: Appearing Symbols
+  turn_all_on: Turn All On
+  turn_all_off: Turn All Off
+  config_from_kb: Configure from Keyboard
+  input_symbols_from_kb: Input symbols ONLY to be contained
+  input_symbols_from_kb_hint: Duplicatied symbols and non-symbol characters will be ignored.
+  cancel: Cancel
+  pass_len: Password Length
+  pass_gen_num: Number of Passwords to Generate
+  generate: Generate
+  generated_pass: Generated Passwords
+  copy: Copy
+  not_yet_generated: Press the above “GENERATE” button and passwords will be listed here.
+  language: Language
+  languages:
+    en: English
+    ja: Japanese (日本語)
+ja:
+  title: パスワードジェネレータ
+  settings: 設定
+  appearance_ratio: 出現比
+  alphabets: アルファベット
+  digits: 数字
+  symbols: 記号
+  uppercase: 大文字
+  appearing_char_type: 出現文字種
+  appearing_symbols: 出現記号
+  turn_all_on: 全てオン
+  turn_all_off: 全てオフ
+  config_from_kb: キーボードから設定
+  input_symbols_from_kb: 出現させたい記号だけを入力
+  input_symbols_from_kb_hint: 記号の重複や、記号以外の文字は無視されます
+  cancel: キャンセル
+  pass_len: パスワード長
+  pass_gen_num: パスワード生成数
+  generate: 生成
+  generated_pass: 生成したパスワード
+  copy: コピー
+  not_yet_generated: 上の「生成」ボタンを押すと、生成されたパスワードが表示されます
+  language: 言語
+  languages:
+    en: 英語 (English)
+    ja: 日本語
+</i18n>
 
 <style lang="sass">
 .font-monospace
@@ -198,6 +266,7 @@ export default Vue.extend({
       passwordLength: 16,
       passwordGenerateCount: 10,
       candicatePasswordGenerateCounts: [1, 5, 10, 20, 50, 100],
+      candicatePasswordLengths: [8, 16, 24, 32, 48, 64, 80, 96, 128],
       availableSymbols,
       using_symbols_list: availableSymbols,
       isSymbolConfigDialogOpened: false,
@@ -205,7 +274,11 @@ export default Vue.extend({
       generatedPasswords: emptyArray<string>(),
       lowerList: sequencedChars("az"),
       upperList: sequencedChars("AZ"),
-      digitsList: sequencedChars("09")
+      digitsList: sequencedChars("09"),
+      languageIcons: {
+        en: "🌐",
+        ja: "🇯🇵"
+      }
     }
   },
   methods: {

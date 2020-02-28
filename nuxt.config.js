@@ -55,7 +55,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["nuxt-clipboard2"],
+  modules: ["nuxt-clipboard2", "nuxt-i18n"],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
@@ -81,6 +81,13 @@ export default {
       }
     }
   },
+  i18n: {
+    locales: ["en", "ja"],
+    defaultLocale: "en",
+    vueI18n: {
+      fallbackLocale: "en"
+    }
+  },
   typescript: {
     typeCheck: process.env.NODE_ENV !== "production",
     ignoreNotFoundWarnings: true
@@ -95,6 +102,11 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {
+      config.module.rules.push({
+        resourceQuery: /blockType=i18n/,
+        type: "javascript/auto",
+        loader: ["@kazupon/vue-i18n-loader", "yaml-loader"]
+      })
       config.plugins.push(new HardSourceWebpackPlugin())
     }
   },
