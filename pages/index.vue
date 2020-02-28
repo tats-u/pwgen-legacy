@@ -287,12 +287,18 @@ export default Vue.extend({
       this.$copyText(pass)
     },
     async generatePasswords() {
-      // .fill(null) is necessary
-      this.generatedPasswords = await Promise.all(
-        Array(this.passwordGenerateCount)
-          .fill(null)
-          .map(() => this.generateOnePassword())
-      )
+      const passwordsArray: string[] = []
+      // Hash table to reduce the order of detecting duplicates
+      const passwordsSet: Set<string> = new Set()
+      for (let i = 0; i < this.passwordGenerateCount; ++i) {
+        let justGenerated: string
+        do {
+          justGenerated = await this.generateOnePassword()
+        } while (passwordsSet.has(justGenerated))
+        passwordsArray.push(justGenerated)
+        passwordsSet.add(justGenerated)
+      }
+      this.generatedPasswords = passwordsArray
     },
     async generateOnePassword() {
       const usingSymbolsList = this.using_symbols_list.join("")
