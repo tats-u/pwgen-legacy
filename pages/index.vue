@@ -253,6 +253,63 @@ function emptyArray<T>(): Array<T> {
   return []
 }
 
+interface PasswordGeneratorOptions {
+  passwordLength: number
+  usesUppers: boolean
+  usesNumbers: boolean
+  usesSymbols: boolean
+  weightAlphas: number
+  weightNumbers: number
+  weightSymbols: number
+  usingSymbolsList: string
+}
+
+class PasswordGenerator {
+  protected option: PasswordGeneratorOptions
+  static lowerList: string = sequencedChars("az")
+  static upperList: string = sequencedChars("AZ")
+  static digitsList: string = sequencedChars("09")
+
+  constructor(option: PasswordGeneratorOptions) {
+    this.option = option
+  }
+
+  public async generateOne(): Promise<string> {
+    const usingSymbolsList = this.option.usingSymbolsList
+    const charListsList = [
+      PasswordGenerator.lowerList,
+      PasswordGenerator.upperList,
+      PasswordGenerator.digitsList,
+      usingSymbolsList
+    ]
+    // p(lower) /= 2 and p(upper) /= 2.
+    // weights must be integers, so p(num) *= 2 and p(symbol) *= 2 instead.
+    const numSymbolWeightCoef = this.option.usesUppers ? 2 : 1
+    const charTypeWeights = [
+      this.option.weightAlphas,
+      this.option.usesUppers ? this.option.weightAlphas : 0,
+      this.option.usesNumbers
+        ? this.option.weightNumbers * numSymbolWeightCoef
+        : 0,
+      this.option.usesSymbols && usingSymbolsList.length
+        ? this.option.weightSymbols * numSymbolWeightCoef
+        : 0
+    ]
+    return (
+      await Promise.all(
+        Array(this.option.passwordLength)
+          .fill(null)
+          .map(async () => {
+            const ret = await chooseOneAsync(
+              await chooseOneAsync(charListsList, charTypeWeights)
+            )
+            return ret
+          })
+      )
+    ).join("")
+  }
+}
+
 export default Vue.extend({
   data() {
     const availableSymbols = [...sequencedChars("!/:@[`{~")]
@@ -272,9 +329,6 @@ export default Vue.extend({
       isSymbolConfigDialogOpened: false,
       usingSymbolListString: "",
       generatedPasswords: emptyArray<string>(),
-      lowerList: sequencedChars("az"),
-      upperList: sequencedChars("AZ"),
-      digitsList: sequencedChars("09"),
       languageIcons: {
         en: "🌐",
         ja: "🇯🇵"
@@ -290,47 +344,27 @@ export default Vue.extend({
       const passwordsArray: string[] = []
       // Hash table to reduce the order of detecting duplicates
       const passwordsSet: Set<string> = new Set()
+
+      const passwordGenerator = new PasswordGenerator({
+        passwordLength: this.passwordLength,
+        usesUppers: this.uses_upper,
+        usesNumbers: this.uses_num,
+        usesSymbols: this.uses_symbol,
+        weightAlphas: this.weight_alpha,
+        weightNumbers: this.weight_num,
+        weightSymbols: this.weight_symbol,
+        usingSymbolsList: this.using_symbols_list.join("")
+      })
+
       for (let i = 0; i < this.passwordGenerateCount; ++i) {
         let justGenerated: string
         do {
-          justGenerated = await this.generateOnePassword()
+          justGenerated = await passwordGenerator.generateOne()
         } while (passwordsSet.has(justGenerated))
         passwordsArray.push(justGenerated)
         passwordsSet.add(justGenerated)
       }
       this.generatedPasswords = passwordsArray
-    },
-    async generateOnePassword() {
-      const usingSymbolsList = this.using_symbols_list.join("")
-      const charListsList = [
-        this.lowerList,
-        this.upperList,
-        this.digitsList,
-        usingSymbolsList
-      ]
-      // p(lower) /= 2 and p(upper) /= 2.
-      // weights must be integers, so p(num) *= 2 and p(symbol) *= 2 instead.
-      const numSymbolWeightCoef = this.uses_upper ? 2 : 1
-      const charTypeWeights = [
-        this.weight_alpha,
-        this.uses_upper ? this.weight_alpha : 0,
-        this.uses_num ? this.weight_num * numSymbolWeightCoef : 0,
-        this.uses_symbol && usingSymbolsList.length
-          ? this.weight_symbol * numSymbolWeightCoef
-          : 0
-      ]
-      return (
-        await Promise.all(
-          Array(this.passwordLength)
-            .fill(null)
-            .map(async () => {
-              const ret = await chooseOneAsync(
-                await chooseOneAsync(charListsList, charTypeWeights)
-              )
-              return ret
-            })
-        )
-      ).join("")
     },
     unifySymbolSwitchesState(state: boolean) {
       this.using_symbols_list = state ? this.availableSymbols : []
