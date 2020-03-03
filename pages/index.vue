@@ -334,6 +334,66 @@ class PasswordGenerator {
   }
 }
 
+class DuplicationRestrictedPaswordGenerator extends PasswordGenerator {
+  /**
+   * PasswordGenerator class preventing consecutive charactors.
+   *
+   * Some websites refuse passwords containing consecutive charactors like "aa" "11".
+   * Moreover, other ones allows those but refuses, e.g., "bbb" "4444" (more than 3 charactors).
+   */
+  protected readonly allowedMaxConsecutiveCharsCount: number
+  constructor(
+    option: PasswordGeneratorOptions,
+    allowedMaxConsecutiveCharsCount: number
+  ) {
+    super(option)
+    this.allowedMaxConsecutiveCharsCount = allowedMaxConsecutiveCharsCount
+  }
+
+  public async generateOne(): Promise<string> {
+    let password = ""
+    let lastGeneratedChar = ""
+    let consecutiveCharsCount = 1
+    while (password.length !== this.option.passwordLength) {
+      // Brute force duplication exclusion using loop
+      // Makeshift implementation
+      // Pile of 💩: Must be refactored
+      let justGeneratedChar
+      do {
+        justGeneratedChar = await chooseOneAsync(
+          await chooseOneAsync(this.charListsList, this.charTypeWeights)
+        )
+      } while (
+        consecutiveCharsCount >= this.allowedMaxConsecutiveCharsCount &&
+        justGeneratedChar === lastGeneratedChar
+      )
+      // End of inefficient algorithm
+      if (justGeneratedChar === lastGeneratedChar) ++consecutiveCharsCount
+
+      password += justGeneratedChar
+      lastGeneratedChar = justGeneratedChar
+    }
+    return password
+  }
+}
+
+function generatePasswordGeneratorInstance(
+  option: PasswordGeneratorOptions,
+  allowedMaxConsecutiveCharsCount: number = 0
+): PasswordGenerator {
+  /**
+   * Factory function of *PasswordGenerator.
+   *
+   * @param {PasswordGeneratorOptions} option Options
+   * @param {number} allowedMaxConsecutiveCharsCount 0: no requirements for consecutive charactors / 1: any consecution rejected / 2: rejected ones like "aaa"
+   */
+  if (allowedMaxConsecutiveCharsCount <= 0) return new PasswordGenerator(option)
+  return new DuplicationRestrictedPaswordGenerator(
+    option,
+    allowedMaxConsecutiveCharsCount
+  )
+}
+
 export default Vue.extend({
   data() {
     const availableSymbols = [...sequencedChars("!/:@[`{~")]
@@ -369,7 +429,7 @@ export default Vue.extend({
       // Hash table to reduce the order of detecting duplicates
       const passwordsSet: Set<string> = new Set()
 
-      const passwordGenerator = new PasswordGenerator({
+      const passwordGenerator = generatePasswordGeneratorInstance({
         passwordLength: this.passwordLength,
         usesUppers: this.uses_upper,
         usesNumbers: this.uses_num,
