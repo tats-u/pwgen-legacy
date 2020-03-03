@@ -41,7 +41,7 @@ v-app
                 v-subheader {{ $t("appearing_symbols") }}
               v-row(align="center" justify="space-around")
                 v-chip-group(multiple column active-class="primary" v-model="using_symbols_list")
-                  v-chip(v-for="(char, idx) in availableSymbols" :value="char") {{ char }}
+                  v-chip(v-for="(char, idx) in availableSymbols" :value="char" :disabled="!uses_symbol") {{ char }}
               v-row(justify="space-between")
                 v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol" color="secondary")
                   v-icon(left) mdi-toggle-switch-off
