@@ -191,7 +191,7 @@ import * as randomNumber from "random-number-csprng"
  * @param start start number
  * @param end end number (itself isn't contained in the result)
  */
-function range(start: number, end: number): Array<number> {
+function range(start: number, end: number): number[] {
   return [...Array(end - start).keys()].map((val) => val + start)
 }
 
@@ -226,13 +226,13 @@ interface Indexable<T> {
   length: number
 }
 
-function accumulate(list: Array<number>): Array<number> {
+function accumulate(list: number[]): number[] {
   return list.map(((sum) => (value) => (sum += value))(0))
 }
 
 async function chooseOneAsync<T>(
   list: Indexable<T>,
-  weights?: Array<number>
+  weights?: number[]
 ): Promise<T> {
   if (list.length === 1) return list[0]
   if (weights && weights.length) {
@@ -249,7 +249,7 @@ async function chooseOneAsync<T>(
   return list[await randomNumber(0, list.length - 1)]
 }
 
-function emptyArray<T>(): Array<T> {
+function emptyArray<T>(): T[] {
   return []
 }
 
