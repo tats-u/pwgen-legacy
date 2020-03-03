@@ -282,18 +282,17 @@ interface PasswordGeneratorOptions {
 }
 
 class PasswordGenerator {
-  protected option: PasswordGeneratorOptions
-  static lowerList: string = sequencedChars("az")
-  static upperList: string = sequencedChars("AZ")
-  static digitsList: string = sequencedChars("09")
+  protected readonly option: PasswordGeneratorOptions
+  protected readonly charListsList: string[]
+  protected readonly charTypeWeights: number[]
+  static readonly lowerList: string = sequencedChars("az")
+  static readonly upperList: string = sequencedChars("AZ")
+  static readonly digitsList: string = sequencedChars("09")
 
   constructor(option: PasswordGeneratorOptions) {
     this.option = option
-  }
-
-  public async generateOne(): Promise<string> {
     const usingSymbolsList = this.option.usingSymbolsList
-    const charListsList = [
+    this.charListsList = [
       PasswordGenerator.lowerList,
       PasswordGenerator.upperList,
       PasswordGenerator.digitsList,
@@ -302,7 +301,7 @@ class PasswordGenerator {
     // p(lower) /= 2 and p(upper) /= 2.
     // weights must be integers, so p(num) *= 2 and p(symbol) *= 2 instead.
     const numSymbolWeightCoef = this.option.usesUppers ? 2 : 1
-    const charTypeWeights = [
+    this.charTypeWeights = [
       this.option.weightAlphas,
       this.option.usesUppers ? this.option.weightAlphas : 0,
       this.option.usesNumbers
@@ -312,13 +311,21 @@ class PasswordGenerator {
         ? this.option.weightSymbols * numSymbolWeightCoef
         : 0
     ]
+  }
+
+  public async generateOne(): Promise<string> {
+    /**
+     * Generates one password.
+     *
+     * @returns {Promise<string>} Generated password
+     */
     return (
       await Promise.all(
         Array(this.option.passwordLength)
           .fill(null)
           .map(async () => {
             const ret = await chooseOneAsync(
-              await chooseOneAsync(charListsList, charTypeWeights)
+              await chooseOneAsync(this.charListsList, this.charTypeWeights)
             )
             return ret
           })
