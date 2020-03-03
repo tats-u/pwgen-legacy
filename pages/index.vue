@@ -63,9 +63,12 @@ v-app
                   v-chip-group(column active-class="primary" v-model="passwordLength")
                     v-chip(v-for="(len, idx) in candicatePasswordLengths" :value="len") {{ len }}
               v-row
-                v-col(cols="12")
+                v-col(cols="12" xs="12" sm="12" md="6" lg="6" xl="6")
                   v-subheader {{ $t("pass_gen_num") }}
                   v-select(v-model="passwordGenerateCount" :items="candicatePasswordGenerateCounts")
+                v-col(cols="12" xs="12" sm="12" md="6" lg="6" xl="6")
+                  v-subheader {{ $t("restriction_consecutive_chars") }}
+                  v-select(v-model="consecution" :items="consecutionPolicies" item-text="description" item-value="value")
           v-card-actions
             v-spacer
             v-btn(color="primary" @click="generatePasswords()")
@@ -140,6 +143,11 @@ en:
   languages:
     en: English
     ja: Japanese (日本語)
+  restriction_consecutive_chars: Restriction of consecutive charactors
+  restriction_consecutive_chars_policies:
+    allow_all: Allow all charactors consecution
+    reject_all: Reject all charactors consecution
+    limit_to_less_than_3: Allow only 2 consecutive charactors
 ja:
   title: パスワードジェネレータ
   settings: 設定
@@ -166,6 +174,11 @@ ja:
   languages:
     en: 英語 (English)
     ja: 日本語
+  restriction_consecutive_chars: 連続文字の制限
+  restriction_consecutive_chars_policies:
+    allow_all: 連続した文字を許可
+    reject_all: 連続した文字を一律禁止
+    limit_to_less_than_3: 3連続以上を禁止
 </i18n>
 
 <style lang="sass">
@@ -396,6 +409,7 @@ function generatePasswordGeneratorInstance(
 
 export default Vue.extend({
   data() {
+    const $t = this.$t.bind(this)
     const availableSymbols = [...sequencedChars("!/:@[`{~")]
     return {
       uses_upper: true,
@@ -416,7 +430,24 @@ export default Vue.extend({
       languageIcons: {
         en: "🌐",
         ja: "🇯🇵"
-      }
+      },
+      consecution: 0,
+      consecutionPolicies: [
+        {
+          value: 0,
+          description: $t("restriction_consecutive_chars_policies.allow_all")
+        },
+        {
+          value: 1,
+          description: $t("restriction_consecutive_chars_policies.reject_all")
+        },
+        {
+          value: 2,
+          description: $t(
+            "restriction_consecutive_chars_policies.limit_to_less_than_3"
+          )
+        }
+      ]
     }
   },
   methods: {
@@ -429,16 +460,19 @@ export default Vue.extend({
       // Hash table to reduce the order of detecting duplicates
       const passwordsSet: Set<string> = new Set()
 
-      const passwordGenerator = generatePasswordGeneratorInstance({
-        passwordLength: this.passwordLength,
-        usesUppers: this.uses_upper,
-        usesNumbers: this.uses_num,
-        usesSymbols: this.uses_symbol,
-        weightAlphas: this.weight_alpha,
-        weightNumbers: this.weight_num,
-        weightSymbols: this.weight_symbol,
-        usingSymbolsList: this.using_symbols_list.join("")
-      })
+      const passwordGenerator = generatePasswordGeneratorInstance(
+        {
+          passwordLength: this.passwordLength,
+          usesUppers: this.uses_upper,
+          usesNumbers: this.uses_num,
+          usesSymbols: this.uses_symbol,
+          weightAlphas: this.weight_alpha,
+          weightNumbers: this.weight_num,
+          weightSymbols: this.weight_symbol,
+          usingSymbolsList: this.using_symbols_list.join("")
+        },
+        this.consecution
+      )
 
       for (let i = 0; i < this.passwordGenerateCount; ++i) {
         let justGenerated: string
