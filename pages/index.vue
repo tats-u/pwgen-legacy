@@ -190,6 +190,9 @@ import * as randomNumber from "random-number-csprng"
  *
  * @param start start number
  * @param end end number (itself isn't contained in the result)
+ *
+ * @example
+ * range(0, 4) // [0, 1, 2, 3]
  */
 function range(start: number, end: number): number[] {
   return [...Array(end - start).keys()].map((val) => val + start)
@@ -197,6 +200,11 @@ function range(start: number, end: number): number[] {
 
 /**
  * Returns the ASCII code of the given character.
+ * @example
+ * ord("A") // 65
+ *
+ * @example
+ * ord("a") // 97
  */
 function ord(char: string): number {
   return char.charCodeAt(0)
@@ -227,6 +235,15 @@ interface Indexable<T> {
 }
 
 function accumulate(list: number[]): number[] {
+  /**
+   * Calculates [a, a+b, a+b+c, ...] from [a, b, c, ...].
+   *
+   * @example
+   * accumulate([1, 1, 1]) // [1, 2, 3]
+   *
+   * @example
+   * accumulate([3, 2, 1]) // [3, 5, 6]
+   */
   return list.map(((sum) => (value) => (sum += value))(0))
 }
 
