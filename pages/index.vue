@@ -489,6 +489,12 @@ class DuplicationRestrictedPaswordGenerator extends PasswordGenerator {
   }
 }
 
+const passwordCharsConsecutionPolicies = [
+  "allow_all",
+  "reject_all",
+  "limit_to_less_than_3"
+]
+
 function generatePasswordGeneratorInstance(
   option: PasswordGeneratorOptions,
   allowedMaxConsecutiveCharsCount: number = 0
@@ -531,22 +537,14 @@ export default Vue.extend({
         ja: "🇯🇵"
       },
       consecution: 0,
-      consecutionPolicies: [
-        {
-          value: 0,
-          description: $t("restriction_consecutive_chars_policies.allow_all")
-        },
-        {
-          value: 1,
-          description: $t("restriction_consecutive_chars_policies.reject_all")
-        },
-        {
-          value: 2,
-          description: $t(
-            "restriction_consecutive_chars_policies.limit_to_less_than_3"
-          )
+      consecutionPolicies: passwordCharsConsecutionPolicies.map(
+        (label: string, index: number) => {
+          return {
+            value: index,
+            description: $t(`restriction_consecutive_chars_policies.${label}`)
+          }
         }
-      ],
+      ),
       alNumRestriction: 0,
       alNumRestrictionPolicies: AlNumTableFactory.labelsForVList.map(
         (label: string, index: number) => {
