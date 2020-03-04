@@ -69,11 +69,15 @@ v-app
                 v-col(cols="12" xs="12" sm="12" md="6" lg="6" xl="6")
                   v-subheader {{ $t("restriction_consecutive_chars") }}
                   v-select(v-model="consecution" :items="consecutionPolicies" item-text="description" item-value="value")
+                v-col(cols="12")
+                  v-subheader {{ $t("restriction_alnum") }}
+                  v-select(v-model="alNumRestriction" :items="alNumRestrictionPolicies" item-text="description" item-value="value")
           v-card-actions
             v-spacer
             v-btn(color="primary" @click="generatePasswords()")
               v-icon(left) mdi-key
               | {{ $t("generate") }}
+    //- The table of generated passwords
     v-row(justify="center")
       v-col(xs="10" sm="9" md="8")
         v-card
@@ -90,6 +94,7 @@ v-app
                         v-btn(icon @click="copyToClipboard(pass)" v-on="on")
                           v-icon mdi-clipboard-arrow-right
                       span {{ $t("copy") }}
+    //- Symbols configuration dialog
     v-row(justify="center")
       v-dialog(v-model="isSymbolConfigDialogOpened" max-width="600")
         v-card
@@ -148,6 +153,11 @@ en:
     allow_all: Allow all charactors consecution
     reject_all: Reject all charactors consecution
     limit_to_less_than_3: Allow only 2 consecutive charactors
+  restriction_alnum: Restriction of alphabets and numbers with similar shapes
+  restriction_alnum_policies:
+    allow_all: Allow all
+    base58: Only in Base58
+    base56: Only in Base56
 ja:
   title: パスワードジェネレータ
   settings: 設定
@@ -179,6 +189,11 @@ ja:
     allow_all: 連続した文字を許可
     reject_all: 連続した文字を一律禁止
     limit_to_less_than_3: 3連続以上を禁止
+  restriction_alnum: 見間違えやすい文字の制限
+  restriction_alnum_policies:
+    allow_all: 文字を制限しない
+    base58: Base58規定文字のみ
+    base56: Base56規定文字のみ
 </i18n>
 
 <style lang="sass">
@@ -283,6 +298,92 @@ function emptyArray<T>(): T[] {
   return []
 }
 
+interface IAlNumTable {
+  readonly uppers: string
+  readonly lowers: string
+  readonly numbers: string
+}
+
+class FullAlNumTable implements IAlNumTable {
+  protected static readonly lowerList: string = sequencedChars("az")
+  protected static readonly upperList: string = sequencedChars("AZ")
+  protected static readonly digitsList: string = sequencedChars("09")
+  get uppers(): string {
+    return FullAlNumTable.upperList
+  }
+
+  get lowers(): string {
+    return FullAlNumTable.lowerList
+  }
+
+  get numbers(): string {
+    return FullAlNumTable.digitsList
+  }
+}
+
+class Base58AlNumTable implements IAlNumTable {
+  protected static readonly lowerList: string = "abcdefghijkmnpqrstuvwxyz"
+  protected static readonly upperList: string = "ABCDEFGHJKLMNPQRSTUVWXYZ"
+  protected static readonly digitsList: string = "23456789"
+  get uppers(): string {
+    return Base58AlNumTable.upperList
+  }
+
+  get lowers(): string {
+    return Base58AlNumTable.lowerList
+  }
+
+  get numbers(): string {
+    return Base58AlNumTable.digitsList
+  }
+}
+
+class Base56AlNumTable implements IAlNumTable {
+  protected static readonly lowerList: string = "abcdefghijkmnpqrstuvwxyz"
+  protected static readonly upperList: string = "ABCDEFGHJKLMNPQRSTUVWXYZ"
+  protected static readonly digitsList: string = "23456789"
+  get uppers(): string {
+    return Base56AlNumTable.upperList
+  }
+
+  get lowers(): string {
+    return Base56AlNumTable.lowerList
+  }
+
+  get numbers(): string {
+    return Base56AlNumTable.digitsList
+  }
+}
+
+class AlNumTableFactory {
+  protected static list = [
+    {
+      label: "allow_all",
+      generate: () => new FullAlNumTable()
+    },
+    {
+      label: "base58",
+      generate: () => new Base58AlNumTable()
+    },
+    {
+      label: "base56",
+      generate: () => new Base56AlNumTable()
+    }
+  ]
+
+  static get labelsForVList(): string[] {
+    return this.list.map((elem) => elem.label)
+  }
+
+  static generate(id: number): IAlNumTable {
+    const elem:
+      | { label: string; generate: () => IAlNumTable }
+      | undefined = this.list[id]
+    if (elem == null) throw new RangeError("Index is out of range")
+    return elem.generate()
+  }
+}
+
 interface PasswordGeneratorOptions {
   passwordLength: number
   usesUppers: boolean
@@ -292,23 +393,21 @@ interface PasswordGeneratorOptions {
   weightNumbers: number
   weightSymbols: number
   usingSymbolsList: string
+  alNumTable: IAlNumTable
 }
 
 class PasswordGenerator {
   protected readonly option: PasswordGeneratorOptions
   protected readonly charListsList: string[]
   protected readonly charTypeWeights: number[]
-  static readonly lowerList: string = sequencedChars("az")
-  static readonly upperList: string = sequencedChars("AZ")
-  static readonly digitsList: string = sequencedChars("09")
 
   constructor(option: PasswordGeneratorOptions) {
     this.option = option
     const usingSymbolsList = this.option.usingSymbolsList
     this.charListsList = [
-      PasswordGenerator.lowerList,
-      PasswordGenerator.upperList,
-      PasswordGenerator.digitsList,
+      this.option.alNumTable.lowers,
+      this.option.alNumTable.uppers,
+      this.option.alNumTable.numbers,
       usingSymbolsList
     ]
     // p(lower) /= 2 and p(upper) /= 2.
@@ -447,7 +546,16 @@ export default Vue.extend({
             "restriction_consecutive_chars_policies.limit_to_less_than_3"
           )
         }
-      ]
+      ],
+      alNumRestriction: 0,
+      alNumRestrictionPolicies: AlNumTableFactory.labelsForVList.map(
+        (label: string, index: number) => {
+          return {
+            value: index,
+            description: $t(`restriction_alnum_policies.${label}`)
+          }
+        }
+      )
     }
   },
   methods: {
@@ -469,7 +577,8 @@ export default Vue.extend({
           weightAlphas: this.weight_alpha,
           weightNumbers: this.weight_num,
           weightSymbols: this.weight_symbol,
-          usingSymbolsList: this.using_symbols_list.join("")
+          usingSymbolsList: this.using_symbols_list.join(""),
+          alNumTable: AlNumTableFactory.generate(this.alNumRestriction)
         },
         this.consecution
       )
