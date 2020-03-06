@@ -111,6 +111,14 @@ v-app
               v-btn(color="primary" type="submit" text)
                 v-icon(left) mdi-check
                 | OK
+      //- Loading dialog
+      v-dialog(v-model="isGeneratingDialogOpened" width="12em" persistent)
+        v-card.text-center
+            v-card-text
+              v-progress-circular(indeterminate color="primary")
+              br
+              | Please wait...
+    //- External links
     v-layout.fixed-bottomright
       .text-center
         .fab-margin
@@ -553,7 +561,8 @@ export default Vue.extend({
             description: $t(`restriction_alnum_policies.${label}`)
           }
         }
-      )
+      ),
+      isGeneratingDialogOpened: false
     }
   },
   methods: {
@@ -562,6 +571,8 @@ export default Vue.extend({
       this.$copyText(pass)
     },
     async generatePasswords() {
+      this.isGeneratingDialogOpened = true
+
       const passwordsArray: string[] = []
       // Hash table to reduce the order of detecting duplicates
       const passwordsSet: Set<string> = new Set()
@@ -590,6 +601,7 @@ export default Vue.extend({
         passwordsSet.add(justGenerated)
       }
       this.generatedPasswords = passwordsArray
+      this.isGeneratingDialogOpened = false
     },
     unifySymbolSwitchesState(state: boolean) {
       this.using_symbols_list = state ? this.availableSymbols : []
