@@ -132,6 +132,7 @@ v-app
 <i18n lang="yaml">
 en:
   title: Password Generator
+  description: Highly configurable password generator
   settings: Settings
   appearance_ratio: Appearance Ratio
   alphabets: Alphabets
@@ -168,6 +169,7 @@ en:
     base56: Only in Base56
 ja:
   title: パスワードジェネレータ
+  description: 細かく設定可能なパスワードジェネレータ
   settings: 設定
   appearance_ratio: 出現比
   alphabets: アルファベット
@@ -618,6 +620,18 @@ export default Vue.extend({
       )
       this.isSymbolConfigDialogOpened = false
       this.usingSymbolListString = ""
+    }
+  },
+  head() {
+    const $t = this.$t.bind(this)
+    return {
+      title: String($t("title")),
+      meta: [
+        { name: "description", content: String($t("description")) },
+        { property: "og:title", content: String($t("title")) },
+        { property: "og:url", content: this.$route.path },
+        { property: "og:type", content: "website" }
+      ]
     }
   }
 })
