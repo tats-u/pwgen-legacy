@@ -369,16 +369,16 @@ class AlNumTableFactory {
   protected static list = [
     {
       label: "allow_all",
-      generate: () => new FullAlNumTable()
+      generate: () => new FullAlNumTable(),
     },
     {
       label: "base58",
-      generate: () => new Base58AlNumTable()
+      generate: () => new Base58AlNumTable(),
     },
     {
       label: "base56",
-      generate: () => new Base56AlNumTable()
-    }
+      generate: () => new Base56AlNumTable(),
+    },
   ]
 
   static get labelsForVList(): string[] {
@@ -418,7 +418,7 @@ class PasswordGenerator {
       this.option.alNumTable.lowers,
       this.option.alNumTable.uppers,
       this.option.alNumTable.numbers,
-      usingSymbolsList
+      usingSymbolsList,
     ]
     // p(lower) /= 2 and p(upper) /= 2.
     // weights must be integers, so p(num) *= 2 and p(symbol) *= 2 instead.
@@ -431,7 +431,7 @@ class PasswordGenerator {
         : 0,
       this.option.usesSymbols && usingSymbolsList.length
         ? this.option.weightSymbols * numSymbolWeightCoef
-        : 0
+        : 0,
     ]
   }
 
@@ -502,7 +502,7 @@ class DuplicationRestrictedPaswordGenerator extends PasswordGenerator {
 const passwordCharsConsecutionPolicies = [
   "allow_all",
   "reject_all",
-  "limit_to_less_than_3"
+  "limit_to_less_than_3",
 ]
 
 function generatePasswordGeneratorInstance(
@@ -544,14 +544,14 @@ export default Vue.extend({
       generatedPasswords: emptyArray<string>(),
       languageIcons: {
         en: "🌐",
-        ja: "🇯🇵"
+        ja: "🇯🇵",
       },
       consecution: 0,
       consecutionPolicies: passwordCharsConsecutionPolicies.map(
         (label: string, index: number) => {
           return {
             value: index,
-            description: $t(`restriction_consecutive_chars_policies.${label}`)
+            description: $t(`restriction_consecutive_chars_policies.${label}`),
           }
         }
       ),
@@ -560,11 +560,11 @@ export default Vue.extend({
         (label: string, index: number) => {
           return {
             value: index,
-            description: $t(`restriction_alnum_policies.${label}`)
+            description: $t(`restriction_alnum_policies.${label}`),
           }
         }
       ),
-      isGeneratingDialogOpened: false
+      isGeneratingDialogOpened: false,
     }
   },
   methods: {
@@ -589,7 +589,7 @@ export default Vue.extend({
           weightNumbers: this.weight_num,
           weightSymbols: this.weight_symbol,
           usingSymbolsList: this.using_symbols_list.join(""),
-          alNumTable: AlNumTableFactory.generate(this.alNumRestriction)
+          alNumTable: AlNumTableFactory.generate(this.alNumRestriction),
         },
         this.consecution
       )
@@ -620,7 +620,7 @@ export default Vue.extend({
       )
       this.isSymbolConfigDialogOpened = false
       this.usingSymbolListString = ""
-    }
+    },
   },
   head() {
     const $t = this.$t.bind(this)
@@ -630,9 +630,9 @@ export default Vue.extend({
         { name: "description", content: String($t("description")) },
         { property: "og:title", content: String($t("title")) },
         { property: "og:url", content: this.$route.path },
-        { property: "og:type", content: "website" }
-      ]
+        { property: "og:type", content: "website" },
+      ],
     }
-  }
+  },
 })
 </script>
