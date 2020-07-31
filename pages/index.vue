@@ -126,7 +126,7 @@ v-app
             v-icon mdi-twitter
         .fab-margin
           v-btn(fab color="green" dark href="https://github.com/tats-u/pwgen/")
-            v-icon mdi-github-circle
+            v-icon mdi-github
 </template>
 
 <i18n lang="yaml">
