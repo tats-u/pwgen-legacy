@@ -92,6 +92,7 @@ export default {
   build: {
     cache: true,
     parallel: true,
+    hardSource: true,
     /*
      ** You can extend webpack config here
      */
@@ -101,7 +102,6 @@ export default {
         type: "javascript/auto",
         loader: ["@kazupon/vue-i18n-loader", "yaml-loader"]
       })
-      config.plugins.push(new HardSourceWebpackPlugin())
     }
   },
   ...(process.env.DEPLOY_ENV === "GH_PAGES"
