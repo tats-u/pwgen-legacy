@@ -2,130 +2,238 @@
 v-app
   v-container
     v-row(justify="center")
-      h1 {{ $t("title") }}
+      h1 {{ $t('title') }}
     v-row(justify="center")
-      v-col(xs="10" sm="9" md="8")
+      v-col(xs="10", sm="9", md="8")
         v-card
-          v-card-title {{ $t("settings") }}
+          v-card-title {{ $t('settings') }}
           v-card-text
             v-container
               v-row
-                v-subheader {{ $t("language") }}
+                v-subheader {{ $t('language') }}
               v-row
-                v-btn-toggle(v-model="$i18n.locale" color="primary")
-                  v-btn(v-for="(emoji, lang) in languageIcons" exclusive :value="lang" @click="$i18n.setLocale(lang)" :key="lang")
-                    | {{ emoji }} {{ $t("languages")[lang] }}
+                v-btn-toggle(v-model="$i18n.locale", color="primary")
+                  v-btn(
+                    v-for="(emoji, lang) in languageIcons",
+                    exclusive,
+                    :value="lang",
+                    @click="$i18n.setLocale(lang)",
+                    :key="lang"
+                  )
+                    | {{ emoji }} {{ $t('languages')[lang] }}
               v-row
-                v-subheader {{ $t("appearance_ratio") }}
+                v-subheader {{ $t('appearance_ratio') }}
               v-row
                 v-col(cols="12")
-                  v-subheader {{ $t("alphabets") }}
-                  v-slider(min="0" max="120" thumb-label v-model="weight_alpha")
+                  v-subheader {{ $t('alphabets') }}
+                  v-slider(
+                    min="0",
+                    max="120",
+                    thumb-label,
+                    v-model="weight_alpha"
+                  )
                     template(v-slot:append)
-                      v-text-field(min="0" max="120" v-model="weight_alpha" type="number")
-                  v-subheader {{ $t("digits") }}
-                  v-slider(min="1" max="120" thumb-label v-model="weight_num" :disabled="!uses_num")
+                      v-text-field(
+                        min="0",
+                        max="120",
+                        v-model="weight_alpha",
+                        type="number"
+                      )
+                  v-subheader {{ $t('digits') }}
+                  v-slider(
+                    min="1",
+                    max="120",
+                    thumb-label,
+                    v-model="weight_num",
+                    :disabled="!uses_num"
+                  )
                     template(v-slot:append)
-                      v-text-field(min="1" max="120" v-model="weight_num" type="number" :disabled="!uses_num")
-                  v-subheader {{ $t("symbols") }}
-                  v-slider(min="1" max="120" thumb-label v-model="weight_symbol" :disabled="!uses_symbol")
+                      v-text-field(
+                        min="1",
+                        max="120",
+                        v-model="weight_num",
+                        type="number",
+                        :disabled="!uses_num"
+                      )
+                  v-subheader {{ $t('symbols') }}
+                  v-slider(
+                    min="1",
+                    max="120",
+                    thumb-label,
+                    v-model="weight_symbol",
+                    :disabled="!uses_symbol"
+                  )
                     template(v-slot:append)
-                      v-text-field(min="1" max="120" v-model="weight_symbol" type="number" :disabled="!uses_symbol")
+                      v-text-field(
+                        min="1",
+                        max="120",
+                        v-model="weight_symbol",
+                        type="number",
+                        :disabled="!uses_symbol"
+                      )
               v-row
-                v-subheader {{ $t("appearing_char_type") }}
-              v-row(align="center" justify="space-around")
-                v-switch(:label="$t('uppercase')" v-model="uses_upper")
-                v-switch(:label="$t('digits')" v-model="uses_num")
-                v-switch(:label="$t('symbols')" v-model="uses_symbol")
+                v-subheader {{ $t('appearing_char_type') }}
+              v-row(align="center", justify="space-around")
+                v-switch(:label="$t('uppercase')", v-model="uses_upper")
+                v-switch(:label="$t('digits')", v-model="uses_num")
+                v-switch(:label="$t('symbols')", v-model="uses_symbol")
               v-row
-                v-subheader {{ $t("appearing_symbols") }}
-              v-row(align="center" justify="space-around")
-                v-chip-group(multiple column active-class="primary" v-model="using_symbols_list")
-                  v-chip(v-for="(char, idx) in availableSymbols" :value="char" :disabled="!uses_symbol") {{ char }}
+                v-subheader {{ $t('appearing_symbols') }}
+              v-row(align="center", justify="space-around")
+                v-chip-group(
+                  multiple,
+                  column,
+                  active-class="primary",
+                  v-model="using_symbols_list"
+                )
+                  v-chip(
+                    v-for="(char, idx) in availableSymbols",
+                    :key="char",
+                    :value="char",
+                    :disabled="!uses_symbol"
+                  ) {{ char }}
               v-row(justify="space-between")
-                v-btn(@click="unifySymbolSwitchesState(false)" :disabled="!uses_symbol" color="secondary")
+                v-btn(
+                  @click="unifySymbolSwitchesState(false)",
+                  :disabled="!uses_symbol",
+                  color="secondary"
+                )
                   v-icon(left) mdi-toggle-switch-off
-                  | {{ $t("turn_all_off") }}
-                v-btn(@click="unifySymbolSwitchesState(true)" :disabled="!uses_symbol" color="secondary")
+                  | {{ $t('turn_all_off') }}
+                v-btn(
+                  @click="unifySymbolSwitchesState(true)",
+                  :disabled="!uses_symbol",
+                  color="secondary"
+                )
                   v-icon(left) mdi-toggle-switch
-                  | {{ $t("turn_all_on") }}
-                v-btn(@click.stop="openSymbolConfigDialog()" :disabled="!uses_symbol" color="secondary")
+                  | {{ $t('turn_all_on') }}
+                v-btn(
+                  @click.stop="openSymbolConfigDialog()",
+                  :disabled="!uses_symbol",
+                  color="secondary"
+                )
                   v-icon(left) mdi-keyboard
-                  | {{ $t("config_from_kb")}}
+                  | {{ $t('config_from_kb') }}
               v-row
                 v-col(cols="12")
-                  v-subheader {{ $t("pass_len") }}
-                  v-slider(min="8" max="128" thumb-label v-model="passwordLength")
+                  v-subheader {{ $t('pass_len') }}
+                  v-slider(
+                    min="8",
+                    max="128",
+                    thumb-label,
+                    v-model="passwordLength"
+                  )
                     template(v-slot:append)
-                      v-text-field(min="8" max="128" v-model="passwordLength" type="number")
-              v-row(align="center" justify="space-around")
+                      v-text-field(
+                        min="8",
+                        max="128",
+                        v-model="passwordLength",
+                        type="number"
+                      )
+              v-row(align="center", justify="space-around")
                 v-col(cols="12")
-                  v-chip-group(column active-class="primary" v-model="passwordLength")
-                    v-chip(v-for="(len, idx) in candicatePasswordLengths" :value="len") {{ len }}
+                  v-chip-group(
+                    column,
+                    active-class="primary",
+                    v-model="passwordLength"
+                  )
+                    v-chip(
+                      v-for="(len, idx) in candicatePasswordLengths",
+                      :key="len",
+                      :value="len"
+                    ) {{ len }}
               v-row
-                v-col(cols="12" xs="12" sm="12" md="6" lg="6" xl="6")
-                  v-subheader {{ $t("pass_gen_num") }}
-                  v-select(v-model="passwordGenerateCount" :items="candicatePasswordGenerateCounts")
-                v-col(cols="12" xs="12" sm="12" md="6" lg="6" xl="6")
-                  v-subheader {{ $t("restriction_consecutive_chars") }}
-                  v-select(v-model="consecution" :items="consecutionPolicies" item-text="description" item-value="value")
+                v-col(cols="12", xs="12", sm="12", md="6", lg="6", xl="6")
+                  v-subheader {{ $t('pass_gen_num') }}
+                  v-select(
+                    v-model="passwordGenerateCount",
+                    :items="candicatePasswordGenerateCounts"
+                  )
+                v-col(cols="12", xs="12", sm="12", md="6", lg="6", xl="6")
+                  v-subheader {{ $t('restriction_consecutive_chars') }}
+                  v-select(
+                    v-model="consecution",
+                    :items="consecutionPolicies",
+                    item-text="description",
+                    item-value="value"
+                  )
                 v-col(cols="12")
-                  v-subheader {{ $t("restriction_alnum") }}
-                  v-select(v-model="alNumRestriction" :items="alNumRestrictionPolicies" item-text="description" item-value="value")
+                  v-subheader {{ $t('restriction_alnum') }}
+                  v-select(
+                    v-model="alNumRestriction",
+                    :items="alNumRestrictionPolicies",
+                    item-text="description",
+                    item-value="value"
+                  )
           v-card-actions
             v-spacer
-            v-btn(color="primary" @click="generatePasswords()")
+            v-btn(color="primary", @click="generatePasswords()")
               v-icon(left) mdi-key
-              | {{ $t("generate") }}
+              | {{ $t('generate') }}
     //- The table of generated passwords
     v-row(justify="center")
-      v-col(xs="10" sm="9" md="8")
+      v-col(xs="10", sm="9", md="8")
         v-card
-          v-card-title {{ $t("generated_pass") }}
+          v-card-title {{ $t('generated_pass') }}
           v-card-text
-            p(v-if="!generatedPasswords.length") {{ $t("not_yet_generated") }}
+            p(v-if="!generatedPasswords.length") {{ $t('not_yet_generated') }}
             v-simple-table
               tbody
                 tr(v-for="(pass, idx) in generatedPasswords")
                   td
-                    span.font-monospace {{pass}}
+                    span.font-monospace {{ pass }}
                     v-tooltip(right)
-                      template(v-slot:activator="{on}")
-                        v-btn(icon @click="copyToClipboard(pass)" v-on="on")
+                      template(v-slot:activator="{ on }")
+                        v-btn(icon, @click="copyToClipboard(pass)", v-on="on")
                           v-icon mdi-clipboard-arrow-right
-                      span {{ $t("copy") }}
+                      span {{ $t('copy') }}
     //- Symbols configuration dialog
     v-row(justify="center")
-      v-dialog(v-model="isSymbolConfigDialogOpened" max-width="600")
+      v-dialog(v-model="isSymbolConfigDialogOpened", max-width="600")
         v-card
           //- Hack: Use @submit."prevent" to prevent reloading by submitting
           v-form(@submit.prevent="setSymbolSwitchesFromStr")
-            v-card-title.headline {{ $t("input_symbols_from_kb") }}
+            v-card-title.headline {{ $t('input_symbols_from_kb') }}
             v-card-text
-              v-text-field(v-model="usingSymbolListString" ref="usingSymbolListString" :hint="$t('input_symbols_from_kb_hint')")
+              v-text-field(
+                v-model="usingSymbolListString",
+                ref="usingSymbolListString",
+                :hint="$t('input_symbols_from_kb_hint')"
+              )
             v-card-actions(justify="center")
               v-spacer
-              v-btn(@click="isSymbolConfigDialogOpened = false" text)
+              v-btn(@click="isSymbolConfigDialogOpened = false", text)
                 v-icon(left) mdi-close
-                | {{ $t("cancel") }}
-              v-btn(color="primary" type="submit" text)
+                | {{ $t('cancel') }}
+              v-btn(color="primary", type="submit", text)
                 v-icon(left) mdi-check
                 | OK
       //- Loading dialog
-      v-dialog(v-model="isGeneratingDialogOpened" width="12em" persistent)
+      v-dialog(v-model="isGeneratingDialogOpened", width="12em", persistent)
         v-card.text-center
-            v-card-text
-              v-progress-circular(indeterminate color="primary")
-              br
-              | Please wait...
+          v-card-text
+            v-progress-circular(indeterminate, color="primary")
+            br
+            | Please wait...
     //- External links
     v-layout.fixed-bottomright
       .text-center
         .fab-margin
-          v-btn(fab color="cyan" dark href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftats-u.github.io%2Fpwgen%2F" target="_blank")
+          v-btn(
+            fab,
+            color="cyan",
+            dark,
+            href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftats-u.github.io%2Fpwgen%2F",
+            target="_blank"
+          )
             v-icon mdi-twitter
         .fab-margin
-          v-btn(fab color="green" dark href="https://github.com/tats-u/pwgen/")
+          v-btn(
+            fab,
+            color="green",
+            dark,
+            href="https://github.com/tats-u/pwgen/"
+          )
             v-icon mdi-github
 </template>
 
@@ -205,17 +313,6 @@ ja:
     base58: Base58規定文字のみ
     base56: Base56規定文字のみ
 </i18n>
-
-<style lang="sass">
-.font-monospace
-  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace
-.fixed-bottomright
-  position: fixed
-  bottom: 0
-  right: 0
-.fab-margin
-  margin: 15px
-</style>
 
 <script lang="ts">
 import Vue from "vue"
@@ -567,6 +664,18 @@ export default Vue.extend({
       isGeneratingDialogOpened: false,
     }
   },
+  head() {
+    const $t = this.$t.bind(this)
+    return {
+      title: String($t("title")),
+      meta: [
+        { name: "description", content: String($t("description")) },
+        { property: "og:title", content: String($t("title")) },
+        { property: "og:url", content: this.$route.path },
+        { property: "og:type", content: "website" },
+      ],
+    }
+  },
   methods: {
     copyToClipboard(pass: string) {
       // @ts-ignore
@@ -622,17 +731,16 @@ export default Vue.extend({
       this.usingSymbolListString = ""
     },
   },
-  head() {
-    const $t = this.$t.bind(this)
-    return {
-      title: String($t("title")),
-      meta: [
-        { name: "description", content: String($t("description")) },
-        { property: "og:title", content: String($t("title")) },
-        { property: "og:url", content: this.$route.path },
-        { property: "og:type", content: "website" },
-      ],
-    }
-  },
 })
 </script>
+
+<style lang="sass">
+.font-monospace
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace
+.fixed-bottomright
+  position: fixed
+  bottom: 0
+  right: 0
+.fab-margin
+  margin: 15px
+</style>
