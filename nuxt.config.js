@@ -3,7 +3,6 @@ import colors from "vuetify/es5/util/colors"
 const ghpagesRoot = "/pwgen"
 
 export default {
-  mode: "universal",
   /*
    ** Headers of the page
    */
