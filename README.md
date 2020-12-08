@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/tats-u/pwgen.svg?branch=master)](https://travis-ci.com/tats-u/pwgen)
 
-https://tats-u.github.io/pwgen/
+<https://tats-u.github.io/pwgen/>
 
 In this generator, you can:
 
