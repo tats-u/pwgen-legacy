@@ -1,5 +1,4 @@
 import colors from "vuetify/es5/util/colors"
-import HardSourceWebpackPlugin from "hard-source-webpack-plugin"
 
 const ghpagesRoot = "/pwgen"
 
@@ -76,6 +75,7 @@ export default {
     }
   },
   i18n: {
+    strategy: "no_prefix",
     locales: ["en", "ja"],
     defaultLocale: "en",
     vueI18n: {

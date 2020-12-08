@@ -13,7 +13,7 @@ v-app
                 v-subheader {{ $t("language") }}
               v-row
                 v-btn-toggle(v-model="$i18n.locale" color="primary")
-                  v-btn(v-for="(emoji, lang) in languageIcons" exclusive :value="lang" :to="switchLocalePath(lang)" :link="lang !== $i18n.locale" nuxt)
+                  v-btn(v-for="(emoji, lang) in languageIcons" exclusive :value="lang" @click="$i18n.setLocale(lang)" :key="lang")
                     | {{ emoji }} {{ $t("languages")[lang] }}
               v-row
                 v-subheader {{ $t("appearance_ratio") }}
