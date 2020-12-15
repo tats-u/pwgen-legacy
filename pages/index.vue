@@ -428,9 +428,9 @@ class FullAlNumTable implements IAlNumTable {
 }
 
 class Base58AlNumTable implements IAlNumTable {
-  protected static readonly lowerList: string = "abcdefghijkmnpqrstuvwxyz"
+  protected static readonly lowerList: string = "abcdefghijkmnopqrstuvwxyz"
   protected static readonly upperList: string = "ABCDEFGHJKLMNPQRSTUVWXYZ"
-  protected static readonly digitsList: string = "23456789"
+  protected static readonly digitsList: string = "123456789"
   get uppers(): string {
     return Base58AlNumTable.upperList
   }
