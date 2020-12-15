@@ -12,10 +12,9 @@ v-app
               v-row
                 v-subheader {{ $t('language') }}
               v-row
-                v-btn-toggle(v-model="$i18n.locale", color="primary")
+                v-btn-toggle(v-model="$i18n.locale", color="primary" mandatory)
                   v-btn(
                     v-for="(emoji, lang) in languageIcons",
-                    exclusive,
                     :value="lang",
                     @click="changeLocale(lang)",
                     :key="lang"
