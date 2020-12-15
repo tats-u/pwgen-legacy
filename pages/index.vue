@@ -17,7 +17,7 @@ v-app
                     v-for="(emoji, lang) in languageIcons",
                     exclusive,
                     :value="lang",
-                    @click="$i18n.setLocale(lang)",
+                    @click="changeLocale(lang)",
                     :key="lang"
                   )
                     | {{ emoji }} {{ $t('languages')[lang] }}
@@ -729,6 +729,9 @@ export default Vue.extend({
       )
       this.isSymbolConfigDialogOpened = false
       this.usingSymbolListString = ""
+    },
+    async changeLocale(lang: string) {
+      await this.$i18n.setLocale(lang)
     },
   },
 })
