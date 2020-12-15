@@ -665,12 +665,12 @@ export default Vue.extend({
     }
   },
   head() {
-    const $t = this.$t.bind(this)
+    const $t = this.$t.bind(this) as (string) => string
     return {
-      title: String($t("title")),
+      title: $t("title") as string,
       meta: [
-        { name: "description", content: String($t("description")) },
-        { property: "og:title", content: String($t("title")) },
+        { name: "description", content: $t("description") },
+        { property: "og:title", content: $t("title") },
         { property: "og:url", content: this.$route.path },
         { property: "og:type", content: "website" },
       ],
