@@ -10,7 +10,7 @@ export default {
     titleTemplate: "%s - " + process.env.npm_package_name,
     meta: [
       { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" }
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
     ],
     link: [
       {
@@ -18,10 +18,10 @@ export default {
         type: "image/x-icon",
         href: `${
           process.env.DEPLOY_ENV === "GH_PAGES" ? ghpagesRoot : ""
-        }/favicon.ico`
-      }
+        }/favicon.ico`,
+      },
       // { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css' }
-    ]
+    ],
   },
   /*
    ** Customize the progress-bar color
@@ -42,7 +42,7 @@ export default {
     // Doc: https://github.com/nuxt-community/eslint-module
     "@nuxt/typescript-build",
     "@nuxtjs/eslint-module",
-    "@nuxtjs/vuetify"
+    "@nuxtjs/vuetify",
   ],
   /*
    ** Nuxt.js modules
@@ -56,7 +56,7 @@ export default {
     customVariables: ["~/assets/variables.scss"],
     defaultAssets: {
       font: true,
-      icons: "mdi"
+      icons: "mdi",
     },
     theme: {
       dark: true,
@@ -68,22 +68,22 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
+          success: colors.green.accent3,
+        },
+      },
+    },
   },
   i18n: {
     strategy: "no_prefix",
     locales: ["en", "ja"],
     defaultLocale: "en",
     vueI18n: {
-      fallbackLocale: "en"
-    }
+      fallbackLocale: "en",
+    },
   },
   typescript: {
     typeCheck: process.env.NODE_ENV !== "production",
-    ignoreNotFoundWarnings: true
+    ignoreNotFoundWarnings: true,
   },
   /*
    ** Build configuration
@@ -95,19 +95,19 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {
+    extend(config, _ctx) {
       config.module.rules.push({
         resourceQuery: /blockType=i18n/,
         type: "javascript/auto",
-        loader: ["@kazupon/vue-i18n-loader", "yaml-loader"]
+        loader: ["@kazupon/vue-i18n-loader", "yaml-loader"],
       })
-    }
+    },
   },
   ...(process.env.DEPLOY_ENV === "GH_PAGES"
     ? {
         router: {
-          base: ghpagesRoot
-        }
+          base: ghpagesRoot,
+        },
       }
-    : {})
+    : {}),
 }
