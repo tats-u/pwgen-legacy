@@ -16,6 +16,6 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@types/node", "@nuxt/types", "nuxt-i18n"]
+    "types": ["@types/node", "@nuxt/types", "@nuxtjs/i18n"]
   }
 }
