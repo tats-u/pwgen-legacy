@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{567:function(n,e,t){"use strict";t.r(e);t(2),t(3),t(4),t(5);var o=t(1).a.extend({fetch:function(n){(0,n.redirect)(301,"/")}}),c=t(60),component=Object(c.a)(o,void 0,void 0,!1,null,null,null);e.default=component.exports}}]);
