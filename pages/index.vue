@@ -378,7 +378,12 @@ function accumulate(list: number[]): number[] {
    * @example
    * accumulate([3, 2, 1]) // [3, 5, 6]
    */
-  return list.map(((sum) => (value) => (sum += value))(0))
+  return list.map(
+    (
+      (sum) => (value) =>
+        (sum += value)
+    )(0)
+  )
 }
 
 async function chooseOneAsync<T>(
@@ -482,9 +487,8 @@ class AlNumTableFactory {
   }
 
   static generate(id: number): IAlNumTable {
-    const elem:
-      | { label: string; generate: () => IAlNumTable }
-      | undefined = this.list[id]
+    const elem: { label: string; generate: () => IAlNumTable } | undefined =
+      this.list[id]
     if (elem == null) throw new RangeError("Index is out of range")
     return elem.generate()
   }

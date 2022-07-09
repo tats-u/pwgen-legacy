@@ -1,6 +1,6 @@
 # Password Generator
 
-[![CI (build)](<https://github.com/tats-u/pwgen/workflows/Build/badge.svg>)](https://github.com/tats-u/pwgen/actions/workflows/build.yml)
+[![CI (build)](https://github.com/tats-u/pwgen/workflows/Build/badge.svg)](https://github.com/tats-u/pwgen/actions/workflows/build.yml)
 
 <https://tats-u.github.io/pwgen/>
 
@@ -22,7 +22,7 @@ You will be able to (can't for now though):
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 $ yarn install
 
