@@ -1,6 +1,6 @@
 # Password Generator
 
-[![Build Status](https://travis-ci.com/tats-u/pwgen.svg?branch=master)](https://travis-ci.com/tats-u/pwgen)
+[![CI (build)](<https://github.com/tats-u/pwgen/workflows/Build/badge.svg>)](https://github.com/tats-u/pwgen/actions/workflows/build.yml)
 
 <https://tats-u.github.io/pwgen/>
 
