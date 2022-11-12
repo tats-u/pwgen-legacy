@@ -55,6 +55,8 @@ jobs:
         if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
       - name: Generate pages
         run: yarn run generate:gh-pages
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
