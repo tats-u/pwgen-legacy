@@ -2,6 +2,7 @@ import colors from "vuetify/es5/util/colors"
 
 const ghpagesRoot = "/pwgen"
 
+/** @type {import("@nuxt/types").NuxtConfig} */
 export default {
   /*
    ** Headers of the page
@@ -81,6 +82,7 @@ export default {
       fallbackLocale: "en",
     },
   },
+  target: "static",
   typescript: {
     typeCheck: process.env.NODE_ENV !== "production",
     ignoreNotFoundWarnings: true,
