@@ -222,7 +222,7 @@ v-app
             fab,
             color="cyan",
             dark,
-            href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftats-u.github.io%2Fpwgen%2F",
+            href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftats-u.github.io%2Fpwgen-legacy%2F",
             target="_blank"
           )
             v-icon mdi-twitter
@@ -231,7 +231,7 @@ v-app
             fab,
             color="green",
             dark,
-            href="https://github.com/tats-u/pwgen/"
+            href="https://github.com/tats-u/pwgen-legacy/"
           )
             v-icon mdi-github
 </template>
