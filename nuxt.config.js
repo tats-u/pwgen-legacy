@@ -1,6 +1,6 @@
 import colors from "vuetify/es5/util/colors"
 
-const ghpagesRoot = "/pwgen"
+const ghpagesRoot = "/pwgen-legacy"
 
 /** @type {import("@nuxt/types").NuxtConfig} */
 export default {

@@ -1,5 +1,5 @@
 {
-  "name": "pwgen",
+  "name": "pwgen-legacy",
   "version": "1.0.0",
   "description": "Password generator",
   "author": "Tatsunori Uchino",
